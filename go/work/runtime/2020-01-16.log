@@ -1,0 +1,7 @@
+ERROR: 2020/01/16 14:28:29 main.go:23: fsdfsfsfd
+TRACE: 2020/01/16 14:29:10 main.go:20: wwwwwwwww
+ERROR: 2020/01/16 14:29:10 main.go:23: fsdfsfsfd
+INFO: 2020/01/16 16:16:18 tServer.go:31: work
+INFO: 2020/01/16 16:44:56 tServer.go:47: done
+INFO: 2020/01/16 16:50:22 tServer.go:47: done
+INFO: 2020/01/16 16:52:16 tServer.go:47: done
