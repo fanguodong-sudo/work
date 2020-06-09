@@ -50,7 +50,14 @@ class LogHelper
 		);
 	}
 
-	public static function info($class, $method, $contents)
+    /**
+     * @param $class
+     * @param $method
+     * @param $contents
+     * @example
+     *  LogHelper::info(static::class, __FUNCTION__, ['type' => 'insert']);
+     */
+    public static function info($class, $method, $contents)
 	{
 		self::write('info', $class, $method, $contents);
 	}

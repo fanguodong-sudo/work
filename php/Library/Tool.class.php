@@ -1,13 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: goo1016
+ * User: fangd
  * Date: 2019/1/4 004
  * Time: 12:01
  */
 
 namespace Library;
-
 
 class Tool
 {
@@ -19,6 +18,103 @@ class Tool
 	const FIXED_REGULAR    = '/^[A-Za-z0-9]{6,30}+$/';
 	const PASSWORD_REGULAR = '/^[A-Za-z0-9]{6,30}+$/';
 
+    /**
+     * 判断是否存在或是否为空，如果为空，不声明变量
+     * @param $source 数据源
+     * @param $key 数组key值
+     * @param $output 数组
+     */
+    public static function checkEmpty($source, $key, &$output){
+        if(isset($source) && $source){
+            $output[$key] = $source;
+        }
+    }
+
+    /**
+     * 自定义合并数组
+     * @param $source
+     * @param int $isSaveKey 1为保留键名，0为不保留，相同键名会合并
+     * @param string 数组键名
+     * @param array 数组
+     * @return array
+     */
+    public static function arrayMerge($source, $isSaveKey=0,$key='',&$output){
+        $response = [];
+        foreach($source as $item){
+            if($item){
+                foreach($item as $key=>$value){
+                    if($isSaveKey==1){
+                        $response[$key] = $value;
+                    }else{
+                        $response[] = $value;
+                    }
+                }
+            }
+        }
+
+        $response = ($isSaveKey==1)?array_unique($response):array_values(array_unique($response));
+        if($key != ''){
+            $output[$key] = $response;
+        }
+        return $response;
+    }
+
+    /**
+     * 格式化key-value格式
+     * @param $key
+     * @param $data
+     * @return array
+     */
+    public static function keyValue($key, $data){
+	    $response = [];
+	    foreach($data as $item){
+            $response[$data[$key]] = $item;
+        }
+	    return $response;
+    }
+
+    /**
+     * 判断空及设置默认值
+     * @param $sourceAndDefault
+     * @return array [值,默认值,过滤函数]
+     * @example $datas = checkEmptyAndSet([
+                    'title'   => [$ret['title'],'','trim'],
+                    'list'    => [$ret['list'],'','strval'],
+                    'last_id' => [$ret['last_id'],null],
+                    'count'   => [$ret['count'],0],
+                ]);
+     */
+    public static function checkEmptyAndSet($sourceAndDefault){
+        $response = [];
+	    foreach($sourceAndDefault as $key => $value){
+	        if(isset($value[2])){
+                $response[$key] = isset($value[0]) && $value[2]($value[0])?$value[2]($value[0]):$value[1];
+            }else{
+                $response[$key] = isset($value[0]) && $value[0]?$value[0]:$value[1];
+            }
+        }
+	    return $response;
+    }
+
+    /**
+     * 根据参数过来数组元素
+     * @param $filter
+     * @param array $data
+     * @return array
+     */
+    public static function filterFields($filter, $data = array())
+    {
+        $new_fields = array();
+        $data = array_filter($data); //过滤空值
+        foreach ($data as $key=>$item) {
+            if(in_array($key, $filter) && is_string($item)){
+                $new_fields[$key] = addslashes($item);
+            }else{
+                $new_fields[$key] = $item;
+            }
+        }
+        return $new_fields;
+    }
 
     /**
      * 是否在设定时间段内
@@ -28,6 +124,20 @@ class Tool
      */
     public static function isInPeriodTime($startTime, $endTime){
 	    return (strtotime($startTime) <=time() && strtotime($endTime) >=time())?true:false;
+    }
+
+    /**
+     * 根据指定键名排序
+     * @param $data array 数据源
+     * @param $key array 排序字段
+     * @return array
+     */
+    public static function sortBykeys($data, $key){
+        $response = [];
+        foreach($key as $v){
+            $response[$v] = $data[$v];
+        }
+        return $response;
     }
 
     /**
