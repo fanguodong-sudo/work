@@ -18,6 +18,60 @@ class Tool
 	const FIXED_REGULAR    = '/^[A-Za-z0-9]{6,30}+$/';
 	const PASSWORD_REGULAR = '/^[A-Za-z0-9]{6,30}+$/';
 
+
+    /**
+     * 自定义array_column
+     * @param $source
+     * @param $column
+     * @return array
+     */
+    public function cusArrayColumn($source, $column){
+        return array_values(array_filter(array_unique(array_column($source,$column))));
+    }
+
+    /**
+     * 多级数组组合
+     * @param $source
+     * @example combineArray([
+        [[[
+        'aa' => '11',
+        'bb' => '22'
+        ]],'bb'],
+        [[[
+        'bb' => '22',
+        'cc' => '33'
+        ]],'cc'],
+        [[[
+        'cc' => '33',
+        'dd' => '44'
+        ]],'dd']
+        ]);
+     * [[数组,主键及下面数组的关系字段]]
+     * @return mixed
+     */
+    public static function combineArray($source){
+        $data = [];
+        foreach($source as $index=>$item){
+            foreach($item[0] as $v){
+                $data[$index][$v[$item[1]]] = $v;
+            }
+        }
+        $len = count($data);
+        for($i=0;$i<$len-1;$i++){
+            $data[$len-$i-2] = self::combine([$data[$len-$i-2],$data[$len-$i-1]],$source[$len-$i-2][1]);
+        }
+        return $data[0];
+    }
+
+    public static function combine($data,$relation){
+        foreach($data[1] as $k => $item){
+            $data[0][
+            $item[$relation]
+            ][$relation.'Child'][$k] = $item;
+        }
+        return $data[0];
+    }
+
     /**
      * 判断是否存在或是否为空，如果为空，不声明变量
      * @param $source 数据源

@@ -10,10 +10,11 @@ class Export {
             $sourceData[] = Tool::sortBykeys($value,$listField);
         }
 
-        $fileData = implode(',',array_keys($listField)) . "\n";
+        $fileData[] = iconv("UTF-8", "GB2312//IGNORE",implode(',',array_keys($listField)));
         foreach ($sourceData as $item) {
-            $fileData .= implode(',',$item) . "\n";
+            $fileData[] = iconv("UTF-8", "GB2312//IGNORE",'"'.implode('","',$item) .'"');
         }
+        $fileData = implode("\n",$fileData);
 
         // 头信息设置
         header("Content-type:text/csv");
