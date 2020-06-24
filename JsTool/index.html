@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>日志管理</title>
+    <link rel="stylesheet" href="/Application/Public/css/reset-min.css">
+    <link rel="stylesheet" href="/Application/Public/css/style-min.css">
+    <link rel="stylesheet" href="/Application/Public/css/jquery-ui-min.css">
+</head>
+<body>
+<!-- Header -->
+<div class="header"><div class="block cf">
+
+</div></div>
+<!-- Header End -->
+
+<div class="navLine">
+
+</div>
+
+<div class="section cf">
+    <div class="block">
+        <div class="aside">
+
+        </div>
+        <!-- main -->
+        <div class="main">
+            <div class="mainNav s2 cf"></div>
+            <div class="mainContent" id="saleContent">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--[if lt IE 7]>
+<script type="text/javascript" src="/Application/Public/js/vendor/ie6png.js"></script>
+<![endif]-->
+<script type="text/javascript">
+    var publicPath = '/Application/Public';
+    //var baseUrl = publicPath + '/modules';
+    //var baseUrl = publicPath + '/js/release/1.0.0';
+    var form_token = '115df35049902891c5201f657071a3f5a3bfee6a';
+</script>
+<script type="text/javascript" src="/Application/Public/js/vendor/jquery.js"></script>
+<script type="text/javascript" src="/Application/Public/js/require.js"  data-main="LogMain"></script>
+<script>
+
+    var tool = (function (){
+
+        var aa = function (){
+            alert('aaa');
+        }
+        var bb = function (){
+            alert('bbb');
+        }
+        return {
+            aa:aa,
+            bb:bb
+        }
+
+    })();
+
+    tool.aa();
+    tool.bb();
+
+</script>
+</body>
+</html>

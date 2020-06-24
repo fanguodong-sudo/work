@@ -1,6 +1,7 @@
-var customTool = {
+define([],function (){
+
     //数组对象转url
-    urlEncode : function (param, key, encode) {
+    var urlEncode : function (param, key, encode) {
         if(param==null) return '';
         var paramStr = '';
         var t = typeof (param);
@@ -14,4 +15,19 @@ var customTool = {
         }
         return paramStr;
     }
-};
+
+    return {
+        urlEncode:urlEncode
+    }
+
+});
+
+//无define引用方法
+// var tool = (function (){
+//     var testFunc = function (){
+//         //you code
+//     };
+//     return {
+//         testFunc:testFunc
+//     }
+// })();
