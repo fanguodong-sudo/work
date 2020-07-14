@@ -18,6 +18,62 @@ class Tool
 	const FIXED_REGULAR    = '/^[A-Za-z0-9]{6,30}+$/';
 	const PASSWORD_REGULAR = '/^[A-Za-z0-9]{6,30}+$/';
 
+    /**
+     * 格式化key-value格式
+     * @param $key
+     * @param $value
+     * @param $source
+     * @return array
+     */
+    public static function keyValueFilter($key,$value,$source){
+        $response = [];
+        foreach($source as $item){
+            $response[$item[$key]] = $item[$value];
+        }
+        return $response;
+    }
+
+    /**
+     * 高德坐标转换为百度坐标
+     * @param  [type] $lng 经度
+     * @param  [type] $lat 纬度
+     * @param  [type] $toType 转换类型，bdTogd=百度转高德，gdTobd=高德转百度
+     * @return array      [description]
+     */
+    public static function coorsConvert($log, $lat, $toType) {
+        if (!settype($log, 'float') || !settype($lat, 'float')) {
+            return array();
+        } else {
+            //判断经纬度的合法性
+            if ($log < -180 || $log > 180 || $lat < -90 || $lat > 90) {
+                return array();
+            }
+        }
+
+        if ($toType == 'bdTogd') {//百度转高德
+            $x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+            $x = $log - 0.0065;
+            $y = $lat - 0.006;
+            $z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * $x_pi);
+            $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
+            $data['lon'] = $z * cos($theta);
+            $data['lat'] = $z * sin($theta);
+            return $data;
+        } else if ($toType == 'gdTobd') {//高德转百度
+            $x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+            $x = $log;
+            $y = $lat;
+            $z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * $x_pi);
+            $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
+            $data['lon'] = $z * cos($theta) + 0.0065;
+            $data['lat'] = $z * sin($theta) + 0.006;
+            return $data;
+        } else {
+            $data['lon'] = $log;
+            $data['lat'] = $lat;
+            return $data;
+        }
+    }
 
     /**
      * 自定义array_column
@@ -25,7 +81,7 @@ class Tool
      * @param $column
      * @return array
      */
-    public function cusArrayColumn($source, $column){
+    public static function cusArrayColumn($source, $column){
         return array_values(array_filter(array_unique(array_column($source,$column))));
     }
 
@@ -122,7 +178,7 @@ class Tool
     public static function keyValue($key, $data){
 	    $response = [];
 	    foreach($data as $item){
-            $response[$data[$key]] = $item;
+            $response[$item[$key]] = $item;
         }
 	    return $response;
     }
