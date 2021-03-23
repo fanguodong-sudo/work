@@ -19,6 +19,61 @@ class Tool
 	const PASSWORD_REGULAR = '/^[A-Za-z0-9]{6,30}+$/';
 
     /**
+     * 搜寻指定参数并处理
+     * @param $data [array] 源数组
+     * @param $time [int] key
+     * @param $func [function] 匿名函数，用来处理搜索到的值
+     * @param $format [string] sprintf的format参数
+     * @param $index [int] 默认0，递归使用
+     * @param $isArray [bool] 默认false，递归使用
+     * @example deepTranslate($data,[
+     *  'item','0','name'
+     * ],function ($d){ return $d+1; }) //0代表下一级是数组
+     * @return array
+     */
+    public function deepTranslate($data,$keys,$func=null,$format='%sEn',$index=0,$isArray=false){
+        $key = $keys[$index];
+        $index++;
+        if($key == '1'){
+            $data = self::deepTranslate($data,$keys,$func,$format,$index,true);
+        }else{
+            if(isset($data[$key]) && is_array($data[$key]) && !$isArray){
+                $data[$key] = self::deepTranslate($data[$key],$keys,$func,$format,$index);
+            }else if($isArray){
+                foreach($data as $k=>$v){
+                    $data[$k][sprintf($format,$key)] = $func($v[$key]);
+                }
+            }else{
+                $data[sprintf($format,$key)] = $func($data[$key]);
+                return $data;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 格式化retryTask格式
+     * @param $func [func] 重试匿名函数
+     * @param $data [array] 匿名函数传入参数
+     * @param $time [int] 重试次数
+     * @param $result [array] 返回结果
+     * @param $sleepMs [int] 间隔时间，单位为毫秒
+     * @return array
+     */
+    public static function retryTask($func,$data,$time=3,&$result,$sleepMs=0){
+        if($time == 0){
+            return ;
+        }
+        $r = $func($data);
+        $result[] = $r;
+        sleep($sleepMs/1000);
+        if(!$r['status']){
+            $time--;
+            self::retryTask($func,$data,$time,$result);
+        }
+    }
+
+    /**
      * 格式化key-value格式
      * @param $key
      * @param $value
