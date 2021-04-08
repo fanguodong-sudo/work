@@ -875,5 +875,22 @@ class Tool
 
         return $default;
     }
+
+    public static function isPNG($data)
+    {
+        return bin2hex(substr($data, 0, 8)) === '89504e470d0a1a0a';
+    }
+
+    public static function isJPG($data)
+    {
+        $code = bin2hex(substr($data, 0, 4));
+        return in_array($code, ['ffd8ffe0', 'ffd8ffe1', 'ffd8ffe8']);
+    }
+
+    public static function isGIF($data)
+    {
+        $code = bin2hex(substr($data, 0, 6));
+        return $code == '474946383961' || $code == '474946383961';
+    }
 }
 
