@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'http://example.com/foo/*',
         'http://example.com/foo/bar',
-        'http://127.0.0.1:8000/request/clause1'
+        'http://127.0.0.1:8000/request/clause1',
+        'http://127.0.0.1:8000/request/clause2'
     ];
 }

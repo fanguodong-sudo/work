@@ -348,16 +348,212 @@ Route::prefix('request')->post('clause1',function (\Illuminate\Http\Request $req
     print_r($all);
 
 
+});
+
+Route::prefix('request')->post('clause2',function (\Illuminate\Http\Request $request){
+
+//    $all = $request->input();
+//    print_r($all);
+//
+//    //查询参数并设置默认值
+//    echo $request->query('dd','dddddd');
+//
+//    //json  将Content-Type设置为application/json
+//    echo $request->input('user.name');
+//
+//    //获取bool
+//    $archived = $request->boolean('user.archived');
+//    var_dump($archived);
+
+//    //另类获取参数的形式
+//    $users = $request->users;
+//    print_r($users);
+//
+//    //仅仅和排除
+//    $input = $request->only(['username', 'password']);
+//    $input = $request->only('username', 'password');
+//    $input = $request->except(['credit_card']);
+//    $input = $request->except('credit_card');
+//
+//    //是否存在
+//    if ($request->has('name')) {
+//        echo 'you name--';
+//    }else{
+//        echo 'wu name--';
+//    }
+//
+//    //如果存在
+//    $request->whenHas('users',function (){
+//        echo 'you users--';
+//    });
+
+//    //多个参数存在
+//    $request->whenHas(['users','city'],function (){
+//        echo 'I have users and city-------';
+//    });
+//
+//    //有任何一个执行
+//    if($request->hasAny(['users','email'])){
+//        echo 'you  users or email! ';
+//    }
+
+    //存在且不为空
+    if($request->filled('users')){
+        echo 'have users------';
+    }else{
+        echo 'no users-----';
+    }
+
+    //存在且不为空时执行
+    $request->whenFilled('users',function ($input){
+        echo 'have have users !---';
+        print_r($input); //全部参数
+    });
+
+    //如果不存在
+    if ($request->missing('name')) {
+        echo 'name missing-------';
+    }else{
+        echo 'name get';
+    }
+});
+
+Route::get('/oldTest',function (\Illuminate\Http\Request $request){
+
+//    //将全部请求参数存入临时session old('name') 调用，仅持续到下一次请求
+//    $request->flash();
+//
+//    //仅username和password刷入临时session
+//    $request->flashOnly(['username','password']);
+//
+//    //除了username和password其他的参数输入临时session
+//    $request->flashExcept(['username','password']);
+//
+//    //PHP中获取临时session的值
+//    $username = $request->old('username');
+
+    //获取cookie
+    $cookList = $request->cookie();
+    print_r($cookList);
+
+    //获取单个cookie
+    $laravel_session = $request->cookie('laravel_session');
+    print_r($laravel_session);
 
 
+    return view('oldTest',['username'=>'blade']);
+});
 
+//上传图片
+Route::get('/upload',function (\Illuminate\Http\Request $request){
 
+    $file = $request->file('photo');
+    $file = $request->photo;
 
+    //如果photo存在
+    if($request->hasFile('photo')){
+        echo 'have photo ';
+    }
 
+    //验证是否上次成功
+    if($request->file('photo')->isValid()){
+        echo 'valid success!';
+    }
 
+    //获取文档地址和后缀名
+    $path = $request->photo->path();
+    $extension = $request->photo->extension();
+
+    //
+    $path = $request->photo->store('images');
+    $path = $request->photo->store('images', 's3');
+
+    //
+    $path = $request->photo->storeAs('images', 'filename.jpg');
+    $path = $request->photo->storeAs('images', 'filename.jpg', 's3');
 
 });
 
+//配置信任代理，在中间件TrustProxies中配置
+//返回结果
+Route::get('/response',function (\Illuminate\Http\Request $request){
+
+    //返回结果设置http code 和header信息
+//    return response('Hello world',404)
+//        ->header('Content-Type','text/plain');
+
+    //设置头部数组
+//    return response('world')
+//        ->withHeaders([
+//            'Content-Type' => 'text/html',
+//            'X-Header-One' => 'Header Value',
+//            'X-Header-Two' => 'Header Value',
+//        ]);
+
+    //返回json
+//    return response()->json([
+//        'name' => 'Abigail',
+//        'state' => 'CA'
+//    ]);
+
+    //返回jsonp
+    //return response()->jsonp('callback',['aa'=> 'aa','bb'=>'bb']);
+//    return response()->json([
+//        'bb'=>'bb',
+//        'ee'=>'ee'
+//    ])->withCallback($request->input('callback'));
+
+    //下载文件
+//    $pathToFile = 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png';
+//    $name = 'aa.jpg';
+//    $header = [
+//        'Content-type'=>'text/html'
+//    ];
+//    //return response()->download($pathToFile);
+//    return response()->download($pathToFile,$name,$header);
+
+    //定义返回信息宏
+    //需要将宏写入Providers的 AppServiceProvider.php 中的boot函数中，
+    return response()->caps('hello tom');
+
+    //todo 缓存头部信息中间件
+
+});
+
+//viewTest
+Route::get('/view',function (){
+    return view('viewTest',['name'=>'Tom']);
+});
+
+Route::get('/admin/view',function (){
+    return view('admin.view',['name'=>'images']);
+});
+
+Route::get('/admin/view1',function (){
+    $user = new stdClass();
+    $user->name = 'tom';
+    $user->age = 18;
+
+    $user2 = new stdClass();
+    $user2->name = 'marry';
+    $user2->age = 20;
+
+
+    $user3 = new stdClass();
+    $user3->name = 'john';
+    $user3->age = 40;
+
+    return view('admin.view')->with('name','jerry')
+        ->with('records',['aa'=>['name'=>'bb'],'bb'=>['name'=>'cc']])
+        ->with('i',1)
+        ->with('boolean',true)
+        ->with('users',[$user,$user2,$user3])
+        ;
+});
+
+
+//所有view共享变量
+//在app/Providers/AppServiceProvider.php boot函数
 
 
 

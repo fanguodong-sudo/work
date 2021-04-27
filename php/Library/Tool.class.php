@@ -19,6 +19,17 @@ class Tool
 	const PASSWORD_REGULAR = '/^[A-Za-z0-9]{6,30}+$/';
 
     /**
+     * 快速日志
+     * @param array $data
+     * @param string $project
+     * @param string $func
+     * @return array
+     */
+    public function quickLog($data,$project,$func){
+        file_put_contents('/data/logs/'.$project.'/'.date('Y-m-d').'.log', $func.': ' . date('Y-m-d H:i:s')." - data: ".json_encode($data)."\r\n", FILE_APPEND);
+    }
+
+    /**
      * 搜寻指定参数并处理
      * @param $data [array] 源数组
      * @param $time [int] key
