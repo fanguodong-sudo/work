@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\WorkController;
 use App\Http\Controllers\TestRouteController;
 use Illuminate\Support\Facades\Route;
 
@@ -547,13 +548,31 @@ Route::get('/admin/view1',function (){
         ->with('records',['aa'=>['name'=>'bb'],'bb'=>['name'=>'cc']])
         ->with('i',1)
         ->with('boolean',true)
-        ->with('users',[$user,$user2,$user3])
-        ;
+        ->with('users',[$user,$user2,$user3]);
+});
+
+Route::get('/admin/artisan',function (){
+    return view('admin.artisan',[
+        'message' => '数目不正确！',
+        'aa' =>'ddd'
+    ]);
 });
 
 
+Route::get('/admin/test',function (){
+
+
+    return '';
+});
+
 //所有view共享变量
 //在app/Providers/AppServiceProvider.php boot函数
+
+
+//工作目录
+Route::get('work/test', [WorkController::class, 'test']);
+
+
 
 
 

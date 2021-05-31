@@ -277,7 +277,41 @@ echo  any records
 @includeFirst(['admin.aa','admin.includeTest'],['name' => 'blade'])
 
 <h5>24. each用法 </h5>
-@each('admin.includeTest',$jobs,'job')
+@each('admin.includeTest',[
+    'name'=>'cat'
+    ],'name')
+
+<h5>25. once用法 </h5>
+@@foreach($user as $user)<br />
+    @@once<br />
+        tom tom tom
+    @@endonce<br />
+@@endforeach<br />
+@foreach($users as $user)
+    @once
+        tom tom tom
+    @endonce
+@endforeach
+<h5>26. @@push用法 (todo 未完成)</h5>
+@push('js')
+    <script src="./aa.js"></script>
+@endpush
+<h5>27. @@php用法 </h5>
+@@php<br />
+    $counter = 100<br />
+@@endphp<br />
+@{{ $counter }}<br />
+@php
+    $counter = 100;
+@endphp
+    {{ $counter }}
+
+<h5>28. @@extends用法 </h5>
+
+@extends('admin.includeTest')
+<h1>php artisan 命令</h1>
+
+
 
 
 

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\View\Components\Alert;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +34,8 @@ class AppServiceProvider extends ServiceProvider
 
         //全view共享
         View::share('key','value');
+
+        //自定义组件
+        Blade::component('package-alert',Alert::class);
     }
 }
